@@ -1,4 +1,4 @@
-package hei.rattrapage.prog.submission;
+package hei.rattrapage.prog.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
