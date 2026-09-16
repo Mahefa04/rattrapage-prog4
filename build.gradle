@@ -151,4 +151,5 @@ dependencies {
 
 
     implementation 'software.amazon.awssdk:s3:2.21.40'
+    implementation 'software.amazon.awssdk:s3-presigner:2.21.40'
 }
