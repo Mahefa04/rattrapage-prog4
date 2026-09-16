@@ -9,9 +9,11 @@ import org.springframework.stereotype.Service;
 public class SubmissionAsyncService {
 
     @Async
-    public void processSubmission() {
-        log.info("Traitement asynchrone démarré sur le thread {}", Thread.currentThread().getName());
+    public void processSubmission(byte[] imageBytes) {
+        log.info(
+                "Traitement asynchrone démarré sur le thread {}",
+                Thread.currentThread().getName());
 
-        // Le resize, S3 et l'envoi de l'email seront ajoutés ici.
+        // Resize, S3 et email seront ajoutés ensuite.
     }
 }

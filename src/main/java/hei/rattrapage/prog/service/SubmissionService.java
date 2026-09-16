@@ -13,12 +13,12 @@ public class SubmissionService {
     private final SubmissionRepository submissionRepository;
     private final SubmissionAsyncService submissionAsyncService;
 
-    public Submission createSubmission(String email) {
+    public Submission createSubmission(String email, byte[] imageBytes) {
         Submission submission = new Submission(email);
 
         Submission savedSubmission = submissionRepository.save(submission);
 
-        submissionAsyncService.processSubmission();
+        submissionAsyncService.processSubmission(imageBytes);
 
         return savedSubmission;
     }
