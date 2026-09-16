@@ -150,5 +150,5 @@ dependencies {
     testImplementation 'org.junit-pioneer:junit-pioneer:2.2.0'
 
 
-
+    implementation 'software.amazon.awssdk:s3:2.21.40'
 }

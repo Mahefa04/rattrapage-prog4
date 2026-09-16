@@ -1,6 +1,9 @@
 package hei.rattrapage.prog.service;
 
 import hei.rattrapage.prog.file.image.ImageResizer;
+import hei.rattrapage.prog.file.storage.S3FileStorage;
+import hei.rattrapage.prog.model.Submission;
+import hei.rattrapage.prog.repository.SubmissionRepository;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,21 +16,35 @@ import org.springframework.stereotype.Service;
 public class SubmissionAsyncService {
 
     private final ImageResizer imageResizer;
+    private final S3FileStorage s3FileStorage;
+    private final SubmissionRepository submissionRepository;
 
     @Async
-    public void processSubmission(byte[] imageBytes) {
+    public void processSubmission(Submission submission, byte[] imageBytes) {
         try {
             log.info(
-                    "Traitement asynchrone démarré sur le thread {}",
+                    "Traitement asynchrone de {} sur le thread {}",
+                    submission.getId(),
                     Thread.currentThread().getName());
 
             byte[] thumbnail = imageResizer.resize(imageBytes);
 
-            log.info("Thumbnail générée : {} bytes", thumbnail.length);
+            String key =
+                    "submissions/" + submission.getId() + "/thumbnail.jpg";
 
-            // S3 et mise à jour de la Submission ensuite.
+            s3FileStorage.upload(key, thumbnail, "image/jpeg");
+
+            submission.updateThumbnailKey(key);
+
+            submissionRepository.save(submission);
+
+            log.info("Thumbnail uploadée avec succès : {}", key);
+
         } catch (IOException e) {
-            log.error("Erreur pendant la génération de la thumbnail", e);
+            log.error(
+                    "Erreur pendant le traitement de la submission {}",
+                    submission.getId(),
+                    e);
         }
     }
 }

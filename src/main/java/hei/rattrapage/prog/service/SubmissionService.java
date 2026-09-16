@@ -18,7 +18,7 @@ public class SubmissionService {
 
         Submission savedSubmission = submissionRepository.save(submission);
 
-        submissionAsyncService.processSubmission(imageBytes);
+        submissionAsyncService.processSubmission(savedSubmission, imageBytes);
 
         return savedSubmission;
     }
@@ -26,4 +26,5 @@ public class SubmissionService {
     public List<Submission> listSubmissions() {
         return submissionRepository.findAll();
     }
+
 }
