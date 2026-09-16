@@ -19,64 +19,58 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class SubmissionAsyncService {
 
-    private final ImageResizer imageResizer;
-    private final S3FileStorage s3FileStorage;
-    private final SubmissionRepository submissionRepository;
-    private final Mailer mailer;
+  private final ImageResizer imageResizer;
+  private final S3FileStorage s3FileStorage;
+  private final SubmissionRepository submissionRepository;
+  private final Mailer mailer;
 
-    @Async
-    public void processSubmission(Submission submission, byte[] imageBytes) {
-        try {
-            log.info(
-                    "Traitement asynchrone de {} sur le thread {}",
-                    submission.getId(),
-                    Thread.currentThread().getName());
+  @Async
+  public void processSubmission(Submission submission, byte[] imageBytes) {
+    try {
+      log.info(
+          "Traitement asynchrone de {} sur le thread {}",
+          submission.getId(),
+          Thread.currentThread().getName());
 
-            byte[] thumbnail = imageResizer.resize(imageBytes);
+      byte[] thumbnail = imageResizer.resize(imageBytes);
 
-            String key =
-                    "submissions/" + submission.getId() + "/thumbnail.jpg";
+      String key = "submissions/" + submission.getId() + "/thumbnail.jpg";
 
-            s3FileStorage.upload(key, thumbnail, "image/jpeg");
+      s3FileStorage.upload(key, thumbnail, "image/jpeg");
 
-            submission.updateThumbnailKey(key);
+      submission.updateThumbnailKey(key);
 
-            submissionRepository.save(submission);
+      submissionRepository.save(submission);
 
-            String downloadUrl = s3FileStorage.generateDownloadUrl(key);
+      String downloadUrl = s3FileStorage.generateDownloadUrl(key);
 
-            sendEmail(submission, downloadUrl);
+      sendEmail(submission, downloadUrl);
 
-            log.info(
-                    "Traitement terminé pour la submission {}",
-                    submission.getId());
+      log.info("Traitement terminé pour la submission {}", submission.getId());
 
-        } catch (IOException e) {
-            log.error(
-                    "Erreur pendant le traitement de la submission {}",
-                    submission.getId(),
-                    e);
-        }
+    } catch (IOException e) {
+      log.error("Erreur pendant le traitement de la submission {}", submission.getId(), e);
     }
+  }
 
-    private void sendEmail(Submission submission, String downloadUrl) {
-        try {
-            Email email =
-                    new Email(
-                            new InternetAddress(submission.getEmail()),
-                            List.of(),
-                            List.of(),
-                            "Votre miniature est prête",
-                            "<p>Votre miniature a été générée.</p>"
-                                    + "<p><a href=\""
-                                    + downloadUrl
-                                    + "\">Télécharger la miniature</a></p>",
-                            List.of());
+  private void sendEmail(Submission submission, String downloadUrl) {
+    try {
+      Email email =
+          new Email(
+              new InternetAddress(submission.getEmail()),
+              List.of(),
+              List.of(),
+              "Votre miniature est prête",
+              "<p>Votre miniature a été générée.</p>"
+                  + "<p><a href=\""
+                  + downloadUrl
+                  + "\">Télécharger la miniature</a></p>",
+              List.of());
 
-            mailer.accept(email);
+      mailer.accept(email);
 
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    } catch (Exception e) {
+      throw new RuntimeException(e);
     }
+  }
 }

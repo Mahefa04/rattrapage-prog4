@@ -10,21 +10,20 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class SubmissionService {
 
-    private final SubmissionRepository submissionRepository;
-    private final SubmissionAsyncService submissionAsyncService;
+  private final SubmissionRepository submissionRepository;
+  private final SubmissionAsyncService submissionAsyncService;
 
-    public Submission createSubmission(String email, byte[] imageBytes) {
-        Submission submission = new Submission(email);
+  public Submission createSubmission(String email, byte[] imageBytes) {
+    Submission submission = new Submission(email);
 
-        Submission savedSubmission = submissionRepository.save(submission);
+    Submission savedSubmission = submissionRepository.save(submission);
 
-        submissionAsyncService.processSubmission(savedSubmission, imageBytes);
+    submissionAsyncService.processSubmission(savedSubmission, imageBytes);
 
-        return savedSubmission;
-    }
+    return savedSubmission;
+  }
 
-    public List<Submission> listSubmissions() {
-        return submissionRepository.findAll();
-    }
-
+  public List<Submission> listSubmissions() {
+    return submissionRepository.findAll();
+  }
 }

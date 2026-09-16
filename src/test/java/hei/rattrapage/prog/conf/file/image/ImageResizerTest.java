@@ -10,32 +10,31 @@ import org.junit.jupiter.api.Test;
 
 class ImageResizerTest {
 
-    private final ImageResizer imageResizer = new ImageResizer();
+  private final ImageResizer imageResizer = new ImageResizer();
 
-    @Test
-    void shouldResizeImageTo256x256() throws Exception {
-        BufferedImage original = new BufferedImage(800, 600, BufferedImage.TYPE_INT_RGB);
+  @Test
+  void shouldResizeImageTo256x256() throws Exception {
+    BufferedImage original = new BufferedImage(800, 600, BufferedImage.TYPE_INT_RGB);
 
-        ByteArrayOutputStream input = new ByteArrayOutputStream();
-        ImageIO.write(original, "png", input);
+    ByteArrayOutputStream input = new ByteArrayOutputStream();
+    ImageIO.write(original, "png", input);
 
-        byte[] result = imageResizer.resize(input.toByteArray());
+    byte[] result = imageResizer.resize(input.toByteArray());
 
-        assertNotNull(result);
+    assertNotNull(result);
 
-        BufferedImage thumbnail = ImageIO.read(new java.io.ByteArrayInputStream(result));
+    BufferedImage thumbnail = ImageIO.read(new java.io.ByteArrayInputStream(result));
 
-        assertNotNull(thumbnail);
-        assertEquals(256, thumbnail.getWidth());
-        assertEquals(256, thumbnail.getHeight());
-    }
+    assertNotNull(thumbnail);
+    assertEquals(256, thumbnail.getWidth());
+    assertEquals(256, thumbnail.getHeight());
+  }
 
-    @Test
-    void shouldRejectInvalidImage() {
-        byte[] invalidImage = "not an image".getBytes();
+  @Test
+  void shouldRejectInvalidImage() {
+    byte[] invalidImage = "not an image".getBytes();
 
-        org.junit.jupiter.api.Assertions.assertThrows(
-                java.io.IOException.class,
-                () -> imageResizer.resize(invalidImage));
-    }
+    org.junit.jupiter.api.Assertions.assertThrows(
+        java.io.IOException.class, () -> imageResizer.resize(invalidImage));
+  }
 }
