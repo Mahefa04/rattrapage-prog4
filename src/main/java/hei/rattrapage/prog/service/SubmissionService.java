@@ -10,14 +10,14 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class SubmissionService {
 
-    private final SubmissionRepository submissionRepository;
+  private final SubmissionRepository submissionRepository;
 
-    public Submission createSubmission(String email) {
-        Submission submission = new Submission(email);
-        return submissionRepository.save(submission);
-    }
+  public Submission createSubmission(String email) {
+    Submission submission = new Submission(email);
+    return submissionRepository.save(submission);
+  }
 
-    public List<Submission> listSubmissions() {
-        return submissionRepository.findAll();
-    }
+  public List<Submission> listSubmissions() {
+    return submissionRepository.findAll();
+  }
 }

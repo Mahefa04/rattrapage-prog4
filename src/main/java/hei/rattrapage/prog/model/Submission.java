@@ -14,23 +14,22 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Submission {
 
-    @Id
-    private UUID id;
+  @Id private UUID id;
 
-    private String email;
+  private String email;
 
-    private String thumbnailKey;
+  private String thumbnailKey;
 
-    private Instant createdAt;
+  private Instant createdAt;
 
-    public Submission(String email) {
-        this.id = UUID.randomUUID();
-        this.email = email;
-        this.thumbnailKey = null;
-        this.createdAt = Instant.now();
-    }
+  public Submission(String email) {
+    this.id = UUID.randomUUID();
+    this.email = email;
+    this.thumbnailKey = null;
+    this.createdAt = Instant.now();
+  }
 
-    public void updateThumbnailKey(String thumbnailKey) {
-        this.thumbnailKey = thumbnailKey;
-    }
+  public void updateThumbnailKey(String thumbnailKey) {
+    this.thumbnailKey = thumbnailKey;
+  }
 }

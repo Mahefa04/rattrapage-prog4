@@ -2,6 +2,7 @@ package hei.rattrapage.prog.endpoint.submission;
 
 import hei.rattrapage.prog.model.Submission;
 import hei.rattrapage.prog.service.SubmissionService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,29 +12,26 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
 public class SubmissionController {
 
-    private final SubmissionService submissionService;
+  private final SubmissionService submissionService;
 
-    @PostMapping(
-            value = "/submissions",
-            consumes = "multipart/form-data",
-            produces = "application/json")
-    public ResponseEntity<Submission> createSubmission(
-            @RequestParam("file") MultipartFile file,
-            @RequestParam("email") String email) {
+  @PostMapping(
+      value = "/submissions",
+      consumes = "multipart/form-data",
+      produces = "application/json")
+  public ResponseEntity<Submission> createSubmission(
+      @RequestParam("file") MultipartFile file, @RequestParam("email") String email) {
 
-        Submission submission = submissionService.createSubmission(email);
+    Submission submission = submissionService.createSubmission(email);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(submission);
-    }
+    return ResponseEntity.status(HttpStatus.CREATED).body(submission);
+  }
 
-    @GetMapping(value = "/submissions", produces = "application/json")
-    public List<Submission> listSubmissions() {
-        return submissionService.listSubmissions();
-    }
+  @GetMapping(value = "/submissions", produces = "application/json")
+  public List<Submission> listSubmissions() {
+    return submissionService.listSubmissions();
+  }
 }
