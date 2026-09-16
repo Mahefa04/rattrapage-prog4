@@ -2,6 +2,7 @@ package hei.rattrapage.prog.service;
 
 import hei.rattrapage.prog.model.Submission;
 import hei.rattrapage.prog.repository.SubmissionRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,5 +15,9 @@ public class SubmissionService {
     public Submission createSubmission(String email) {
         Submission submission = new Submission(email);
         return submissionRepository.save(submission);
+    }
+
+    public List<Submission> listSubmissions() {
+        return submissionRepository.findAll();
     }
 }
